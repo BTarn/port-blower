@@ -112,6 +112,12 @@ void resetCounter()
 //+------------------------------------------------------------------+
 void flipDirectionMartingale()
   {
+  double ask = SymbolInfoDouble(Symbol(), SYMBOL_ASK);
+  double bid = SymbolInfoDouble(Symbol(), SYMBOL_BID);
+  
+  ask = NormalizeDouble(ask,Digits());
+  bid = NormalizeDouble(bid,Digits());
+  
    if(position_with_magic_number == 0)
      {
       if(buy_side)
@@ -128,7 +134,7 @@ void flipDirectionMartingale()
       if(buy_with_magic_number > 0)
         {
          PositionSelectByTicket(posTicket);
-         if(PositionGetDouble(POSITION_PROFIT) + (range_width * Point()) <= 0)
+         if(PositionGetDouble(POSITION_PROFIT) + (range_width * Point() * lotFactor) <= 0)
            {
             this_round_profit += PositionGetDouble(POSITION_PROFIT);
             trade.PositionClose(posTicket);
@@ -165,7 +171,7 @@ void flipDirectionMartingale()
          if(sell_with_magic_number > 0)
            {
             PositionSelectByTicket(posTicket);
-            if(PositionGetDouble(POSITION_PROFIT) + (range_width * Point()) <= 0)
+            if(PositionGetDouble(POSITION_PROFIT) + (range_width * Point() * lotFactor) <= 0)
               {
                this_round_profit += PositionGetDouble(POSITION_PROFIT);
                trade.PositionClose(posTicket);
