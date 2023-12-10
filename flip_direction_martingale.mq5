@@ -112,12 +112,12 @@ void resetCounter()
 //+------------------------------------------------------------------+
 void flipDirectionMartingale()
   {
-  double ask = SymbolInfoDouble(Symbol(), SYMBOL_ASK);
-  double bid = SymbolInfoDouble(Symbol(), SYMBOL_BID);
-  
-  ask = NormalizeDouble(ask,Digits());
-  bid = NormalizeDouble(bid,Digits());
-  
+   double ask = SymbolInfoDouble(Symbol(), SYMBOL_ASK);
+   double bid = SymbolInfoDouble(Symbol(), SYMBOL_BID);
+
+   ask = NormalizeDouble(ask,Digits());
+   bid = NormalizeDouble(bid,Digits());
+
    if(position_with_magic_number == 0)
      {
       if(buy_side)
@@ -134,7 +134,7 @@ void flipDirectionMartingale()
       if(buy_with_magic_number > 0)
         {
          PositionSelectByTicket(posTicket);
-         if(PositionGetDouble(POSITION_PROFIT) + (range_width * Point() * lotFactor) <= 0)
+         if(PositionGetDouble(POSITION_PRICE_CURRENT) - PositionGetDouble(POSITION_PRICE_OPEN) <= (-1 * range_width * Point()))
            {
             this_round_profit += PositionGetDouble(POSITION_PROFIT);
             trade.PositionClose(posTicket);
@@ -147,7 +147,7 @@ void flipDirectionMartingale()
            }
          else
             //            if(PositionGetDouble(POSITION_PROFIT) >= (range_width * Point()))
-            if(PositionGetDouble(POSITION_PROFIT) + this_round_profit > 0)
+            if(PositionGetDouble(POSITION_PRICE_CURRENT) - PositionGetDouble(POSITION_PRICE_OPEN) >= (range_width * Point()))
               {
                if(PositionGetDouble(POSITION_PROFIT) + this_round_profit > trailing_profit)
                  {
@@ -155,14 +155,11 @@ void flipDirectionMartingale()
                  }
                else
                  {
-                  if(trailing_profit - PositionGetDouble(POSITION_PROFIT) - this_round_profit >= 0.05)
-                    {
-                     trade.PositionClose(posTicket);
-                     trade.Sell(lotSize);
-                     this_round_profit = 0;
-                     lotFactor = 1;
-                     trailing_profit = 0;
-                    }
+                  trade.PositionClose(posTicket);
+                  trade.Sell(lotSize);
+                  this_round_profit = 0;
+                  lotFactor = 1;
+                  trailing_profit = 0;
                  }
               }
         }
@@ -171,7 +168,7 @@ void flipDirectionMartingale()
          if(sell_with_magic_number > 0)
            {
             PositionSelectByTicket(posTicket);
-            if(PositionGetDouble(POSITION_PROFIT) + (range_width * Point() * lotFactor) <= 0)
+            if(PositionGetDouble(POSITION_PRICE_CURRENT) - PositionGetDouble(POSITION_PRICE_OPEN) >= (range_width * Point()))
               {
                this_round_profit += PositionGetDouble(POSITION_PROFIT);
                trade.PositionClose(posTicket);
@@ -184,7 +181,7 @@ void flipDirectionMartingale()
               }
             else
                //               if(PositionGetDouble(POSITION_PROFIT) >= (range_width * Point()))
-               if(PositionGetDouble(POSITION_PROFIT) + this_round_profit > 0)
+               if(PositionGetDouble(POSITION_PRICE_OPEN) - PositionGetDouble(POSITION_PRICE_CURRENT) >= (range_width * Point()))
                  {
                   if(PositionGetDouble(POSITION_PROFIT) + this_round_profit > trailing_profit)
                     {
@@ -192,14 +189,11 @@ void flipDirectionMartingale()
                     }
                   else
                     {
-                     if(trailing_profit - PositionGetDouble(POSITION_PROFIT) - this_round_profit >= 0.05)
-                       {
-                        trade.PositionClose(posTicket);
-                        trade.Buy(lotSize);
-                        this_round_profit = 0;
-                        lotFactor = 1;
-                        trailing_profit = 0;
-                       }
+                     trade.PositionClose(posTicket);
+                     trade.Buy(lotSize);
+                     this_round_profit = 0;
+                     lotFactor = 1;
+                     trailing_profit = 0;
                     }
                  }
            }
