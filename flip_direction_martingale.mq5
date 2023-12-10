@@ -155,7 +155,7 @@ void flipDirectionMartingale()
                  }
                else
                  {
-                  if(trailing_profit - PositionGetDouble(POSITION_PROFIT) - this_round_profit >= ((range_width/4) * Point()))
+                  if(trailing_profit - PositionGetDouble(POSITION_PROFIT) - this_round_profit >= 0.05)
                     {
                      trade.PositionClose(posTicket);
                      trade.Sell(lotSize);
@@ -192,7 +192,7 @@ void flipDirectionMartingale()
                     }
                   else
                     {
-                     if(trailing_profit - PositionGetDouble(POSITION_PROFIT) - this_round_profit >= ((range_width/4) * Point()))
+                     if(trailing_profit - PositionGetDouble(POSITION_PROFIT) - this_round_profit >= 0.05)
                        {
                         trade.PositionClose(posTicket);
                         trade.Buy(lotSize);
