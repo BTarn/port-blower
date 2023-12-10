@@ -31,7 +31,7 @@ bool stop_trailing = false;
 
 input double lotSize = 0.01; // Trading lot size
 input ulong magic_number = 13;
-input double range_width = 1;
+input double range_width = 260;
 
 
 CTrade trade;
