@@ -147,7 +147,7 @@ void flipDirectionMartingale()
            }
          else
             //            if(PositionGetDouble(POSITION_PROFIT) >= (range_width * Point()))
-            if(PositionGetDouble(POSITION_PROFIT) > 0)
+            if(PositionGetDouble(POSITION_PROFIT) + this_round_profit > 0)
               {
                if(PositionGetDouble(POSITION_PROFIT) + this_round_profit > trailing_profit)
                  {
@@ -184,7 +184,7 @@ void flipDirectionMartingale()
               }
             else
                //               if(PositionGetDouble(POSITION_PROFIT) >= (range_width * Point()))
-               if(PositionGetDouble(POSITION_PROFIT) > 0)
+               if(PositionGetDouble(POSITION_PROFIT) + this_round_profit > 0)
                  {
                   if(PositionGetDouble(POSITION_PROFIT) + this_round_profit > trailing_profit)
                     {
