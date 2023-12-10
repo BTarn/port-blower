@@ -26,6 +26,7 @@ double trailing_profit = 0;
 ulong posTicket;
 
 bool buy_side = true;
+bool stop_trailing = false;
 
 
 input double lotSize = 0.01; // Trading lot size
@@ -146,12 +147,14 @@ void flipDirectionMartingale()
             trade.Sell(lot);
            }
          else
+           {
             //            if(PositionGetDouble(POSITION_PROFIT) >= (range_width * Point()))
             if(PositionGetDouble(POSITION_PRICE_CURRENT) - PositionGetDouble(POSITION_PRICE_OPEN) >= (range_width * Point()))
               {
                if(PositionGetDouble(POSITION_PROFIT) + this_round_profit > trailing_profit)
                  {
                   trailing_profit = PositionGetDouble(POSITION_PROFIT) + this_round_profit;
+                  stop_trailing = true;
                  }
                else
                  {
@@ -160,8 +163,19 @@ void flipDirectionMartingale()
                   this_round_profit = 0;
                   lotFactor = 1;
                   trailing_profit = 0;
+                  stop_trailing = false;
                  }
               }
+           }
+         if(stop_trailing)
+           {
+            trade.PositionClose(posTicket);
+            trade.Sell(lotSize);
+            this_round_profit = 0;
+            lotFactor = 1;
+            trailing_profit = 0;
+            stop_trailing = false;
+           }
         }
       else
         {
@@ -180,12 +194,14 @@ void flipDirectionMartingale()
                trade.Buy(lot);
               }
             else
+              {
                //               if(PositionGetDouble(POSITION_PROFIT) >= (range_width * Point()))
                if(PositionGetDouble(POSITION_PRICE_OPEN) - PositionGetDouble(POSITION_PRICE_CURRENT) >= (range_width * Point()))
                  {
                   if(PositionGetDouble(POSITION_PROFIT) + this_round_profit > trailing_profit)
                     {
                      trailing_profit = PositionGetDouble(POSITION_PROFIT) + this_round_profit;
+                     stop_trailing = true;
                     }
                   else
                     {
@@ -194,8 +210,19 @@ void flipDirectionMartingale()
                      this_round_profit = 0;
                      lotFactor = 1;
                      trailing_profit = 0;
+                     stop_trailing = false;
                     }
                  }
+              }
+            if(stop_trailing)
+              {
+               trade.PositionClose(posTicket);
+               trade.Buy(lotSize);
+               this_round_profit = 0;
+               lotFactor = 1;
+               trailing_profit = 0;
+               stop_trailing = false;
+              }
            }
         }
      }
